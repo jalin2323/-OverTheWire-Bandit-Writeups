@@ -98,4 +98,59 @@ Using `./` forces Linux to treat it as a file.
 - **Output:** Password retrieved successfully
 - **Concept:** Unlike raw ports, SSL/TLS ports require a secure handshake. openssl s_client establishes this encrypted tunnel so you can communicate safely.
 
+## Level 16 -> Level 17
+**Goal:** Find the correct SSL service and retrieve the password for the next level.
+- **Command Used:** nmap -sV localhost -p 31000-32000; openssl s_client -connect localhost:[port]
+- **Output:** Private SSH key retrieved
+- **Concept:** Port scanning with nmap identifies which ports are listening. Connecting to the correct SSL-enabled service allows you to submit the current password and receive an RSA private key.
+
+## Level 17 -> Level 18
+**Goal:** Find the password by comparing two files passwords.old and passwords.new.
+- **Command Used:** diff passwords.old passwords.new
+- **Output:** Password retrieved successfully
+- **Concept:** The diff command compares files line by line. In this level, it isolates the single line that was changed between the old and new versions.
+
+## Level 18 -> Level 19
+**Goal:** Retrieve the password despite being logged out immediately after login.
+- **Command Used:** ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme
+- **Output:** Password retrieved successfully
+- **Concept:** By appending a command to the end of an SSH login string, you can execute that command (like cat) on the remote server before the login shell (which is modified to exit) closes the session.
+
+## Level 19 -> Level 20
+**Goal:** Use the SUID binary to read the password.
+- **Command Used:** ./bandit20-do cat /etc/bandit_pass/bandit20
+- **Output:** Password retrieved successfully
+- **Concept:** SUID (Set-user Identification) allows a user to execute a binary with the permissions of the file owner. Using the provided binary allows you to read the bandit20 password file which is otherwise restricted.
+
+## Level 20 -> Level 21
+**Goal:** Use a network service that requires sending the current password.
+- **Command Used:** nc -l -p [port] <<< "current_password" & ./suconnect [port]
+- **Output:** Password retrieved successfully
+- **Concept:** This level requires establishing a local listener (nc) that sends the current password when the SUID binary (suconnect) connects to it, creating a "handshake" to release the next password.
+
+## Level 21 -> Level 22
+**Goal:** Find the password from a cron job script.
+- **Command Used:** ls /etc/cron.d/; cat /usr/bin/cronjob_bandit22.sh; cat /tmp/[filename]
+- **Output:** Password retrieved successfully
+- **Concept:** Cron jobs are scheduled tasks. By reading the cron configuration and the associated shell script, you can find the location where the script automatically saves the password.
+
+## Level 22 -> Level 23
+**Goal:** Find the password generated dynamically by a cron job.
+- **Command Used:** cat /usr/bin/cronjob_bandit23.sh; (echo I am user bandit23 | md5sum)
+- **Output:** Password retrieved successfully
+- **Concept:** This level involves reverse-engineering a script that uses a mathematical function (like md5sum) to create a unique filename in /tmp/ based on the username.
+
+## Level 23 -> Level 24
+**Goal:** Exploit a writable cron job directory to retrieve the password.
+- **Command Used:** echo "cat /etc/bandit_pass/bandit24 > /tmp/my_pass" > /var/spool/bandit24/foo.sh; chmod 777 /var/spool/bandit24/foo.sh
+- **Output:** Password retrieved successfully
+- **Concept:** If a cron job executes every file in a directory, you can drop a custom script into that directory to perform actions (like reading a password) with the cron user's higher privileges.
+
+## Level 24 -> Level 25
+**Goal:** Brute-force the 4-digit PIN to retrieve the password.
+- **Command Used:** for i in {0000..9999}; do echo "password $i"; done | nc localhost 30002
+- **Output:** Password retrieved successfully
+- **Concept:** Shell scripting can automate the process of trying every possible combination (0000-9999). Piping this list into netcat allows you to brute-force a network service efficiently.
+
+
 
