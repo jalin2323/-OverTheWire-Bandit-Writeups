@@ -152,5 +152,41 @@ Using `./` forces Linux to treat it as a file.
 - **Output:** Password retrieved successfully
 - **Concept:** Shell scripting can automate the process of trying every possible combination (0000-9999). Piping this list into netcat allows you to brute-force a network service efficiently.
 
+## Level 25 -> Level 26
+**Goal:** Log in to bandit26 using the SSH key, but the shell is /usr/bin/showtext which logs you out.
+- **Command Used:** Resize terminal to very small; ssh -i bandit26.key bandit26@localhost; press 'v' in more; :e /etc/bandit_pass/bandit26
+- **Output:** Password retrieved successfully
+- **Concept:** This exploits the 'more' command's behavior when the terminal window is too small to display text. From 'more', you can drop into the 'vi' editor to execute commands or read files.
+
+## Level 26 -> Level 27
+**Goal:** Use the bandit26 shell to log in as bandit27.
+- **Command Used:** :set shell=/bin/bash; :shell; ./bandit27-do cat /etc/bandit_pass/bandit27
+- **Output:** Password retrieved successfully
+- **Concept:** Once inside the vi editor (from the previous level), you can change the shell variable to a standard bash shell and escape the restricted environment to run SUID binaries.
+
+## Level 27 -> Level 28
+**Goal:** Clone a git repository and find the password in the README file.
+- **Command Used:** git clone ssh://bandit27-git@localhost/home/bandit27-git/repo /tmp/myrepo
+- **Output:** Password retrieved successfully
+- **Concept:** This introduces basic Git version control. Cloning a repository downloads the project files, where passwords or sensitive data are often mistakenly left in documentation.
+
+## Level 28 -> Level 29
+**Goal:** Find the password in a git repository where it has been replaced by "XXXXX".
+- **Command Used:** git log -p; git checkout [commit_hash]
+- **Output:** Password retrieved successfully
+- **Concept:** Git tracks history. Even if a password is deleted or overwritten in the current version, it remains in the commit history. git log -p allows you to see the changes made in previous versions.
+
+## Level 29 -> Level 30
+**Goal:** Find the password in a git repository where it is not in the current branch.
+- **Command Used:** git branch -a; git checkout [branch_name]; cat README
+- **Output:** Password retrieved successfully
+- **Concept:** Git repositories can have multiple branches. If the information isn't in the "master" or "main" branch, it might be hidden in a development or production branch.
+
+## Level 30 -> Level 31
+**Goal:** Find the password in a git repository that uses tags.
+- **Command Used:** git tag; git show [tag_name]
+- **Output:** Password retrieved successfully
+- **Concept:** Tags are used to mark specific points in a repository's history (like releases). Using git show on a specific tag can reveal files or messages that contain the password.
+
 
 
