@@ -188,5 +188,31 @@ Using `./` forces Linux to treat it as a file.
 - **Output:** Password retrieved successfully
 - **Concept:** Tags are used to mark specific points in a repository's history (like releases). Using git show on a specific tag can reveal files or messages that contain the password.
 
+## Level 31 -> Level 32
+**Goal:** Push a specific file to a remote git repository to receive the password.
+- **Command Used:** echo "May I come in?" > key.txt; git add -f key.txt; git commit -m "add key"; git push
+- **Output:** Password retrieved successfully
+- **Concept:** This level tests your ability to modify a repository and push changes back to a server. The -f (force) flag is often needed if the filename is listed in a .gitignore file.
+
+## Level 32 -> Level 33
+**Goal:** Escape a restricted shell (shsh) that converts all input to uppercase.
+- **Command Used:** $0
+- **Output:** Password retrieved successfully
+- **Concept:** In many shell environments, $0 refers to the name of the shell or the current process. Executing $0 can sometimes spawn a new, unrestricted shell instance (like /bin/sh) that bypasses the input filters.
+
+## Level 33 -> Level 34
+**Goal:** Simply log in and find the final password file (the "End of Game" level).
+- **Command Used:** ls -la; cat README.txt
+- **Output:** Password retrieved successfully
+- **Concept:** This is often the concluding level for specific versions of Bandit. It reinforces the basic habit of checking the current directory for hidden files or introductory text files upon login.
+
+## Level 34 -> Level 35
+**Goal:** Transition to the next set of challenges or "Bandit" expansion levels.
+- **Command Used:** cat /etc/bandit_pass/bandit34
+- **Output:** Password retrieved successfully
+- **Concept:** Similar to previous standard levels, the password for the next level is stored in the standard location in /etc/bandit_pass/.
+
+
+
 
 
